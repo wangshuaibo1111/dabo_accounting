@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm config *)",
+      "Bash(cat > *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://rsproxy.cn\")",
+      "Bash(npx neu *)",
+      "Bash(npx vite *)",
+      "Bash(mv postcss.config.js postcss.config.cjs)",
+      "Bash(mv tailwind.config.js tailwind.config.cjs)",
+      "Bash(pkill -f \"vite\")",
+      "Bash(mkdir -p \"d:/Code/VibeCoding/大博记账APP/public/icons\")",
+      "Bash(node -e ' *)",
+      "Bash(pkill -f \"node.*vite\")",
+      "Bash(git --version)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\22856\\.cargo"
+    ]
+  }
+}

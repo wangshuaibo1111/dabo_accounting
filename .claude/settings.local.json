@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(npm view *)",
+      "Bash(npx electron-rebuild *)",
+      "Bash(npx electron-vite *)",
+      "Bash(kill %1)",
+      "Bash(npm run *)",
+      "Bash(npx electron *)",
+      "Bash(node node_modules/electron/install.js)",
+      "Bash(node -e \"console.log\\(require\\('d:/Code/VibeCoding/大博记账APP/node_modules/electron/package.json'\\).version\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(unzip -o \"C:/Users/22856/AppData/Local/electron/Cache/4b092cc678b6ff8448c5ab35fabca1710dccc91cfbff065280601a184126b0fe/electron-v33.4.11-win32-x64.zip\")",
+      "Bash(node -e \"console.log\\(require\\('d:/Code/VibeCoding/大博记账APP/node_modules/@electron-toolkit/utils/package.json'\\).version\\)\")",
+      "Bash(\"./node_modules/electron/dist/electron.exe\" out/main/index.js)",
+      "Bash(node -e \"const fs = require\\('fs'\\); fs.writeFileSync\\('test.js', 'console.log\\(typeof require\\(\\\\\"electron\\\\\"\\)\\); console.log\\(Object.keys\\(require\\(\\\\\"electron\\\\\"\\)\\).slice\\(0,10\\)\\);'\\)\")",
+      "Bash(\"./node_modules/electron/dist/electron.exe\" test.js)",
+      "Bash(\"./node_modules/electron/dist/electron.exe\" .)",
+      "Bash(\"./d:/Code/VibeCoding/大博记账APP/node_modules/electron/dist/electron.exe\" --version)",
+      "Bash(node_modules/electron/dist/electron.exe --version)",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/electron'\\)\\)\")",
+      "Bash(cd /tmp)",
+      "Bash(echo \"console.log\\(typeof require\\('electron'\\)\\);\")",
+      "Bash(\"d:/Code/VibeCoding/大博记账APP/node_modules/electron/dist/electron.exe\" test-electron.js)",
+      "Bash(node -e \"const pkg = require\\('./node_modules/electron/package.json'\\); console.log\\('main:', pkg.main\\); console.log\\('exports:', JSON.stringify\\(pkg.exports, null, 2\\)\\);\")",
+      "Bash(node -e \"const fs = require\\('fs'\\); fs.writeFileSync\\('test-electron2.js', 'console.log\\(\\\\\"Testing electron module...\\\\\"\\); try { const e = require\\(\\\\\"electron\\\\\"\\); console.log\\(\\\\\"type:\\\\\", typeof e\\); if \\(typeof e === \\\\\"object\\\\\"\\) { console.log\\(\\\\\"keys:\\\\\", Object.keys\\(e\\).slice\\(0,20\\)\\); } else { console.log\\(\\\\\"value:\\\\\", e\\); } } catch\\(err\\) { console.log\\(\\\\\"error:\\\\\", err.message\\); } console.log\\(\\\\\"Checking process...\\\\\"\\); console.log\\(\\\\\"process.type:\\\\\", process.type\\); console.log\\(\\\\\"process.versions.electron:\\\\\", process.versions.electron\\);'\\); \")",
+      "Bash(\"./node_modules/electron/dist/electron.exe\" test-electron2.js)",
+      "Bash(\"./node_modules/electron/dist/electron.exe\" test-electron3.js)",
+      "Bash(\"./node_modules/electron/dist/electron.exe\" test-electron4.js)",
+      "Bash(\"./node_modules/electron/dist/electron.exe\" test-electron5.js)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(\"./node_modules/electron/dist/electron.exe\" test-electron6.js)"
+    ]
+  }
+}
