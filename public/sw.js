@@ -26,6 +26,13 @@ self.addEventListener('activate', (event) => {
   self.clients.claim()
 })
 
+// 监听消息（支持 skipWaiting）
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
+})
+
 // 请求拦截：缓存优先 + 网络更新
 self.addEventListener('fetch', (event) => {
   // 跳过 chrome-extension 和非 GET 请求
