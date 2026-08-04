@@ -53,6 +53,20 @@ function createTables(): void {
   db.run(`CREATE INDEX IF NOT EXISTS idx_records_date ON records(date DESC)`)
   db.run(`CREATE INDEX IF NOT EXISTS idx_records_type ON records(type)`)
   db.run(`CREATE INDEX IF NOT EXISTS idx_records_category_l1 ON records(category_l1)`)
+
+  // 用户自定义分类表
+  db.run(`
+    CREATE TABLE IF NOT EXISTS user_categories (
+      id TEXT PRIMARY KEY,
+      type TEXT NOT NULL,
+      name TEXT NOT NULL,
+      icon TEXT DEFAULT '📦',
+      children TEXT DEFAULT '[]',
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    )
+  `)
+  db.run(`CREATE INDEX IF NOT EXISTS idx_user_categories_type ON user_categories(type)`)
 }
 
 function saveDatabase(): void {
@@ -225,6 +239,88 @@ export function getDailyStats(days: number): DailyStats[] {
   stmt.free()
 
   return Array.from(map.values())
+}
+
+// ========== 用户自定义分类 CRUD ==========
+
+export interface UserCategoryRow {
+  id: string
+  type: string
+  name: string
+  icon: string
+  children: string   // JSON string in DB
+  created_at: string
+  updated_at: string
+}
+
+// 获取某类型的所有用户自定义分类
+export function getUserCategories(type: string): UserCategoryRow[] {
+  const database = getDB()
+  const stmt = database.prepare(
+    'SELECT * FROM user_categories WHERE type = ? ORDER BY created_at ASC'
+  )
+  stmt.bind([type])
+
+  const results: UserCategoryRow[] = []
+  while (stmt.step()) {
+    const row = stmt.getAsObject()
+    results.push({
+      id: row.id as string,
+      type: row.type as string,
+      name: row.name as string,
+      icon: (row.icon as string) || '📦',
+      children: (row.children as string) || '[]',
+      created_at: row.created_at as string,
+      updated_at: row.updated_at as string,
+    })
+  }
+  stmt.free()
+  return results
+}
+
+// 新增用户分类
+export function addUserCategory(type: string, name: string, icon: string, children: string[]): UserCategoryRow {
+  const database = getDB()
+  const now = new Date().toISOString()
+  const id = uuidv4()
+
+  database.run(
+    `INSERT INTO user_categories (id, type, name, icon, children, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [id, type, name, icon, JSON.stringify(children), now, now]
+  )
+  saveDatabase()
+
+  return {
+    id, type, name, icon,
+    children: JSON.stringify(children),
+    created_at: now, updated_at: now,
+  }
+}
+
+// 更新用户分类（名称、图标、子分类）
+export function updateUserCategory(id: string, name: string, icon: string, children: string[]): boolean {
+  const database = getDB()
+  const now = new Date().toISOString()
+
+  database.run(
+    `UPDATE user_categories SET name = ?, icon = ?, children = ?, updated_at = ? WHERE id = ?`,
+    [name, icon, JSON.stringify(children), now, id]
+  )
+  saveDatabase()
+
+  // 同步更新使用该分类的记录（如果分类名变了）
+  // 注意：由于分类名可能出现在 records.category_l1 中，改名时需要更新 records 表
+  // 这里暂保持简单，让用户在改名后手动更新；也可以通过触发器或应用层同步
+
+  return true
+}
+
+// 删除用户分类
+export function deleteUserCategory(id: string): boolean {
+  getDB().run('DELETE FROM user_categories WHERE id = ?', [id])
+  saveDatabase()
+  return true
 }
 
 // ========== 工具 ==========

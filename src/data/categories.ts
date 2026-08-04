@@ -1,5 +1,23 @@
 import type { Category } from '../types'
 
+// 用户自定义分类的简化结构（从数据库读取后转换）
+export interface UserCategoryInfo {
+  id: string
+  name: string
+  icon: string
+  children: string[]
+  isPreset: false
+}
+
+// 扩展 Category，标记是否为预置
+export interface CategoryInfo {
+  name: string
+  icon: string
+  children: string[]
+  isPreset: boolean
+  userCategoryId?: string   // 用户分类的数据库ID（用于编辑/删除）
+}
+
 // 支出分类
 export const expenseCategories: Category[] = [
   { name: '餐饮饮食', icon: '🍽️', children: ['三餐', '零食', '水果', '饮品', '外卖', '聚餐'] },
@@ -36,6 +54,49 @@ export function getCategoryL1List(type: 'expense' | 'income'): string[] {
 export function getCategoryL2List(type: 'expense' | 'income', categoryL1: string): string[] {
   const cat = getCategories(type).find((c) => c.name === categoryL1)
   return cat ? cat.children : []
+}
+
+// 判断某个分类名是否为预置分类
+export function isPresetCategory(name: string, type: 'expense' | 'income'): boolean {
+  const cats = type === 'expense' ? expenseCategories : incomeCategories
+  return cats.some((c) => c.name === name)
+}
+
+// 合并预置 + 用户自定义分类
+export function mergeCategories(
+  type: 'expense' | 'income',
+  userCategories: { id: string; name: string; icon: string; children: string[] }[]
+): CategoryInfo[] {
+  const presets: CategoryInfo[] = (type === 'expense' ? expenseCategories : incomeCategories).map((c) => ({
+    name: c.name,
+    icon: c.icon,
+    children: [...c.children],
+    isPreset: true,
+  }))
+
+  const customs: CategoryInfo[] = userCategories.map((uc) => ({
+    name: uc.name,
+    icon: uc.icon,
+    children: [...uc.children],
+    isPreset: false,
+    userCategoryId: uc.id,
+  }))
+
+  return [...presets, ...customs]
+}
+
+// 仅获取用户可编辑的分类（即非预置分类）
+export function getEditableCategories(
+  _type: 'expense' | 'income',
+  userCategories: { id: string; name: string; icon: string; children: string[] }[]
+): CategoryInfo[] {
+  return userCategories.map((uc) => ({
+    name: uc.name,
+    icon: uc.icon,
+    children: [...uc.children],
+    isPreset: false,
+    userCategoryId: uc.id,
+  }))
 }
 
 export function getCategoryIcon(categoryL1: string): string {

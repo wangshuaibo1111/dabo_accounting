@@ -55,3 +55,14 @@ export interface DailyStats {
   income: number
   expense: number
 }
+
+// 用户自定义分类
+export interface UserCategory {
+  id: string
+  type: RecordType
+  name: string
+  icon: string
+  children: string[]    // 二级分类列表 (JSON序列化存储)
+  createdAt: string
+  updatedAt: string
+}

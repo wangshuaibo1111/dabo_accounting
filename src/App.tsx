@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import {
   initDatabase, addRecord, deleteRecord, queryRecords,
   getMonthlyStats, getCategoryStats, getDailyStats,
+  getUserCategories, type UserCategoryRow,
 } from './lib/database'
-import { expenseCategories, incomeCategories, getCategoryIcon } from './data/categories'
+import { getCategoryIcon, mergeCategories } from './data/categories'
 import type { Record as AppRecord, NewRecord, FilterOptions, MonthlyStats, CategoryStats, DailyStats } from './types'
 import AddExpenseDialog from './components/AddExpenseDialog'
 import AddIncomeDialog from './components/AddIncomeDialog'
@@ -12,6 +13,7 @@ import FilterBar from './components/FilterBar'
 import StatisticsPanel from './components/StatisticsPanel'
 import ExportDialog from './components/ExportDialog'
 import ImportDialog from './components/ImportDialog'
+import CategoryManager from './components/CategoryManager'
 
 function App(): JSX.Element {
   const [dbReady, setDbReady] = useState(false)
@@ -22,7 +24,9 @@ function App(): JSX.Element {
   const [showIncomeDialog, setShowIncomeDialog] = useState(false)
   const [showExportDialog, setShowExportDialog] = useState(false)
   const [showImportDialog, setShowImportDialog] = useState(false)
+  const [showCategoryManager, setShowCategoryManager] = useState(false)
   const [showStats, setShowStats] = useState(true)
+  const [userCategories, setUserCategories] = useState<{ expense: UserCategoryRow[]; income: UserCategoryRow[] }>({ expense: [], income: [] })
   const [filters, setFilters] = useState<FilterOptions>({
     startDate: null, endDate: null, categoryL1: null, keyword: '', type: 'all',
   })
@@ -32,7 +36,7 @@ function App(): JSX.Element {
   // 初始化
   useEffect(() => {
     initDatabase()
-      .then(() => { setDbReady(true); refreshData() })
+      .then(() => { setDbReady(true); refreshData(); loadUserCategories() })
       .catch((err: Error) => { console.error(err); setDbError(err.message) })
   }, [])
 
@@ -72,14 +76,35 @@ function App(): JSX.Element {
     deleteRecord(id); refreshData()
   }, [refreshData])
 
-  // 合并分类（支出+收入）用于筛选下拉
-  const allCategories = useMemo(() => {
-    const names = new Set([...expenseCategories.map(c => c.name), ...incomeCategories.map(c => c.name)])
-    return Array.from(names).map(name => {
-      const found = expenseCategories.find(c => c.name === name) || incomeCategories.find(c => c.name === name)
-      return found!
+  // 加载用户自定义分类
+  const loadUserCategories = useCallback(() => {
+    setUserCategories({
+      expense: getUserCategories('expense'),
+      income: getUserCategories('income'),
     })
   }, [])
+
+  // 合并预置+用户分类（转换为 Category 格式兼容旧组件）
+  const mergedExpenseCategories = useMemo(() => {
+    return toCategoryList(mergeCategories('expense',
+      userCategories.expense.map(uc => ({ id: uc.id, name: uc.name, icon: uc.icon, children: safeParse(uc.children, ['其他']) }))
+    ))
+  }, [userCategories.expense])
+
+  const mergedIncomeCategories = useMemo(() => {
+    return toCategoryList(mergeCategories('income',
+      userCategories.income.map(uc => ({ id: uc.id, name: uc.name, icon: uc.icon, children: safeParse(uc.children, ['其他']) }))
+    ))
+  }, [userCategories.income])
+
+  // 合并分类（支出+收入）用于筛选下拉
+  const allCategories = useMemo(() => {
+    const map = new Map<string, { name: string; icon: string; children: string[] }>()
+    ;[...mergedExpenseCategories, ...mergedIncomeCategories].forEach(c => {
+      if (!map.has(c.name)) map.set(c.name, c)
+    })
+    return Array.from(map.values())
+  }, [mergedExpenseCategories, mergedIncomeCategories])
 
   // 加载中
   if (!dbReady && !dbError) {
@@ -120,6 +145,11 @@ function App(): JSX.Element {
               className="text-gray-400 hover:text-cyan-500 px-1.5 py-1.5 rounded-lg text-xs transition-colors"
               title="导入CSV"
             >📥</button>
+            <button
+              onClick={() => setShowCategoryManager(true)}
+              className="text-gray-400 hover:text-cyan-500 px-1.5 py-1.5 rounded-lg text-xs transition-colors"
+              title="管理分类"
+            >📂</button>
             <button
               onClick={() => setShowExportDialog(true)}
               className="text-gray-400 hover:text-cyan-500 px-1.5 py-1.5 rounded-lg text-xs transition-colors"
@@ -179,7 +209,7 @@ function App(): JSX.Element {
         )}
 
         {/* 筛选栏 */}
-        <FilterBar filters={filters} onFilterChange={setFilters} categories={allCategories} />
+        <FilterBar filters={filters} onFilterChange={setFilters} categories={allCategories.map(c => ({ name: c.name, icon: c.icon, children: c.children }))} />
 
         {/* 记录列表 */}
         {records.length === 0 ? (
@@ -195,13 +225,13 @@ function App(): JSX.Element {
 
       {/* 弹窗 */}
       {showExpenseDialog && (
-        <AddExpenseDialog categories={expenseCategories} today={todayStr}
+        <AddExpenseDialog categories={mergedExpenseCategories} today={todayStr}
           onSave={(data) => { handleAddRecord(data); setShowExpenseDialog(false) }}
           onClose={() => setShowExpenseDialog(false)}
         />
       )}
       {showIncomeDialog && (
-        <AddIncomeDialog categories={incomeCategories} today={todayStr}
+        <AddIncomeDialog categories={mergedIncomeCategories} today={todayStr}
           onSave={(data) => { handleAddRecord(data); setShowIncomeDialog(false) }}
           onClose={() => setShowIncomeDialog(false)}
         />
@@ -215,8 +245,30 @@ function App(): JSX.Element {
           onClose={() => setShowImportDialog(false)}
         />
       )}
+      {showCategoryManager && (
+        <CategoryManager
+          onClose={() => setShowCategoryManager(false)}
+          onCategoriesChanged={loadUserCategories}
+        />
+      )}
     </div>
   )
+}
+
+// 将 CategoryInfo[] 转为 Category[]
+function toCategoryList(infoList: { name: string; icon: string; children: string[] }[]): { name: string; icon: string; children: string[] }[] {
+  return infoList.map(c => ({ name: c.name, icon: c.icon, children: [...c.children] }))
+}
+
+// 安全解析 JSON
+function safeParse(json: string, fallback: string[]): string[] {
+  try {
+    const parsed = JSON.parse(json)
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed
+    return fallback
+  } catch {
+    return fallback
+  }
 }
 
 export default App

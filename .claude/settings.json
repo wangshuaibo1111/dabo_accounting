@@ -76,7 +76,8 @@
       "Bash(cmd //c \"set ANDROID_HOME=C:\\\\Users\\\\22856\\\\AppData\\\\Local\\\\Android\\\\Sdk && set ANDROID_SDK_ROOT=C:\\\\Users\\\\22856\\\\AppData\\\\Local\\\\Android\\\\Sdk && set JAVA_HOME=D:\\\\develop\\\\Java\\\\jdk-21 && \\\\\"D:\\\\Code\\\\VibeCoding\\\\大博记账APP\\\\android\\\\gradlew.bat\\\\\" -p \\\\\"D:\\\\Code\\\\VibeCoding\\\\大博记账APP\\\\android\\\\\" assembleDebug 2>&1\")",
       "Bash(cmd //c \"set ANDROID_HOME=C:\\\\Users\\\\22856\\\\AppData\\\\Local\\\\Android\\\\Sdk && set ANDROID_SDK_ROOT=C:\\\\Users\\\\22856\\\\AppData\\\\Local\\\\Android\\\\Sdk && set JAVA_HOME=D:\\\\develop\\\\Java\\\\jdk-21 && cd /d D:\\\\Code\\\\VibeCoding\\\\大博记账APP\\\\android && call gradlew.bat assembleDebug\")",
       "Bash(cmd //c \"set ANDROID_HOME=C:\\\\Users\\\\22856\\\\AppData\\\\Local\\\\Android\\\\Sdk && set JAVA_HOME=D:\\\\develop\\\\Java\\\\jdk-21 && d: && cd D:\\\\Code\\\\VibeCoding\\\\大博记账APP\\\\android && .\\\\gradlew.bat assembleDebug\")",
-      "Bash(git commit -m 'fix: Service Worker始终注册，修复PWA离线打开报错 *)"
+      "Bash(git commit -m 'fix: Service Worker始终注册，修复PWA离线打开报错 *)",
+      "Bash(git commit -m 'feat: 用户自定义分类管理功能 *)"
     ],
     "additionalDirectories": [
       "C:\\Users\\22856\\.cargo"
