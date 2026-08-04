@@ -22,6 +22,9 @@ export async function initDatabase(): Promise<void> {
     try {
       const binaryData = base64ToUint8Array(savedData)
       db = new SQL.Database(binaryData)
+      // 确保旧数据库也包含最新的表结构
+      createTables()
+      saveDatabase()
       return
     } catch {
       console.warn('无法加载已保存的数据库，将创建新数据库')

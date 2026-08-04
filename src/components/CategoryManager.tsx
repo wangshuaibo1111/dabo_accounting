@@ -105,7 +105,8 @@ export default function CategoryManager({ onClose, onCategoriesChanged }: Props)
           <h2 className="text-base font-semibold text-gray-700">
             {showForm ? (editMode !== 'new' ? '✏️ 编辑分类' : '➕ 新增分类') : '📂 管理分类'}
           </h2>
-          <button onClick={onClose} className="text-gray-300 hover:text-gray-500 text-lg leading-none">&times;</button>
+          <button onClick={() => showForm ? setEditMode(null) : onClose()}
+            className="text-gray-300 hover:text-gray-500 text-lg leading-none">&times;</button>
         </div>
 
         <div className="overflow-y-auto flex-1">
