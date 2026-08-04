@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import type { CategoryStats, DailyStats } from '../types'
-import { expenseCategories, incomeCategories, getCategoryIcon } from '../data/categories'
+import { getCategoryIcon } from '../data/categories'
 
 // 饼图配色
 const PIE_COLORS = [
@@ -82,14 +82,16 @@ export default function StatisticsPanel({ expenseCategoryStats, incomeCategorySt
                 cx="50%" cy="50%"
                 innerRadius={50} outerRadius={90}
                 paddingAngle={3} dataKey="value"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={(props: any) =>
+                  `${props.name || ''} ${((props.percent ?? 0) * 100).toFixed(0)}%`
+                }
               >
                 {expensePieData.map((_, i) => (
                   <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} stroke="none" />
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: number) => [`¥${value.toFixed(2)}`, '金额']}
+                formatter={(_value: unknown) => { const v = _value as number; return [`¥${v.toFixed(2)}`, '金额'] }}
                 contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
               />
             </PieChart>
@@ -108,14 +110,16 @@ export default function StatisticsPanel({ expenseCategoryStats, incomeCategorySt
                 cx="50%" cy="50%"
                 innerRadius={50} outerRadius={90}
                 paddingAngle={3} dataKey="value"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={(props: any) =>
+                  `${props.name || ''} ${((props.percent ?? 0) * 100).toFixed(0)}%`
+                }
               >
                 {incomePieData.map((_, i) => (
                   <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} stroke="none" />
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: number) => [`¥${value.toFixed(2)}`, '金额']}
+                formatter={(_value: unknown) => { const v = _value as number; return [`¥${v.toFixed(2)}`, '金额'] }}
                 contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
               />
             </PieChart>
@@ -153,8 +157,8 @@ export default function StatisticsPanel({ expenseCategoryStats, incomeCategorySt
                   tickFormatter={(v: number) => `¥${v}`}
                 />
                 <Tooltip
-                  formatter={(value: number) => [`¥${value.toFixed(2)}`, '']}
-                  labelFormatter={(d: string) => `📅 ${d}`}
+                  formatter={(_value: unknown) => { const v = _value as number; return [`¥${v.toFixed(2)}`, ''] }}
+                  labelFormatter={(_d: unknown) => `📅 ${_d as string}`}
                   contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
                 />
                 <Line type="monotone" dataKey="expense" stroke="#f43f5e" strokeWidth={2}

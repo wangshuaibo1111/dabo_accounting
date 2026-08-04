@@ -10,6 +10,8 @@ import AddIncomeDialog from './components/AddIncomeDialog'
 import ExpenseList from './components/ExpenseList'
 import FilterBar from './components/FilterBar'
 import StatisticsPanel from './components/StatisticsPanel'
+import ExportDialog from './components/ExportDialog'
+import ImportDialog from './components/ImportDialog'
 
 function App(): JSX.Element {
   const [dbReady, setDbReady] = useState(false)
@@ -18,6 +20,8 @@ function App(): JSX.Element {
   const [monthlyStats, setMonthlyStats] = useState<MonthlyStats | null>(null)
   const [showExpenseDialog, setShowExpenseDialog] = useState(false)
   const [showIncomeDialog, setShowIncomeDialog] = useState(false)
+  const [showExportDialog, setShowExportDialog] = useState(false)
+  const [showImportDialog, setShowImportDialog] = useState(false)
   const [showStats, setShowStats] = useState(true)
   const [filters, setFilters] = useState<FilterOptions>({
     startDate: null, endDate: null, categoryL1: null, keyword: '', type: 'all',
@@ -59,6 +63,10 @@ function App(): JSX.Element {
   // 操作
   const handleAddRecord = useCallback((data: NewRecord) => {
     addRecord(data); refreshData()
+  }, [refreshData])
+  const handleBatchImport = useCallback((records: NewRecord[]) => {
+    records.forEach((r) => addRecord(r))
+    refreshData()
   }, [refreshData])
   const handleDelete = useCallback((id: string) => {
     deleteRecord(id); refreshData()
@@ -106,7 +114,17 @@ function App(): JSX.Element {
       <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <h1 className="text-lg font-bold text-gray-700 tracking-tight">📒 大博记账</h1>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
+            <button
+              onClick={() => setShowImportDialog(true)}
+              className="text-gray-400 hover:text-cyan-500 px-1.5 py-1.5 rounded-lg text-xs transition-colors"
+              title="导入CSV"
+            >📥</button>
+            <button
+              onClick={() => setShowExportDialog(true)}
+              className="text-gray-400 hover:text-cyan-500 px-1.5 py-1.5 rounded-lg text-xs transition-colors"
+              title="导出账单"
+            >📤</button>
             <button
               onClick={() => setShowIncomeDialog(true)}
               className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-sm shadow-emerald-200 flex items-center gap-1"
@@ -186,6 +204,15 @@ function App(): JSX.Element {
         <AddIncomeDialog categories={incomeCategories} today={todayStr}
           onSave={(data) => { handleAddRecord(data); setShowIncomeDialog(false) }}
           onClose={() => setShowIncomeDialog(false)}
+        />
+      )}
+      {showExportDialog && (
+        <ExportDialog records={records} onClose={() => setShowExportDialog(false)} />
+      )}
+      {showImportDialog && (
+        <ImportDialog
+          onImport={(records) => { handleBatchImport(records); }}
+          onClose={() => setShowImportDialog(false)}
         />
       )}
     </div>

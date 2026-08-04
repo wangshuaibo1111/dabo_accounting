@@ -1,5 +1,5 @@
 // 大博记账 - Service Worker (离线缓存)
-const CACHE_NAME = 'dabo-accounting-v2'
+const CACHE_NAME = 'dabo-accounting-v3'
 
 // 需要预缓存的文件（构建时自动更新）
 const PRECACHE_URLS = [
