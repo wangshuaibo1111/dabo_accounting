@@ -3,3 +3,16 @@ dist/
 target/
 *.db
 *.sqlite
+release/
+
+# Android build outputs
+android/app/build/
+android/app/release/
+android/build/
+android/.gradle/
+android/local.properties
+android/captures/
+*.apk
+*.aab
+*.jks
+*.keystore

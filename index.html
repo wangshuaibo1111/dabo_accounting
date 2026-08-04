@@ -2,17 +2,25 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>大博记账</title>
-    <meta name="description" content="个人记账应用 - 简单明了的支出管理" />
+    <meta name="description" content="个人记账应用 - 简单明了的收支管理" />
+
+    <!-- PWA / 主题色 -->
     <meta name="theme-color" content="#f59e0b" />
     <meta name="msapplication-TileColor" content="#f59e0b" />
-    <link rel="manifest" href="/manifest.json?v=2" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon.ico?v=2" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=2" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png?v=2" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=2" />
-    <link rel="mask-icon" href="/icons/icon-512.png?v=2" color="#f59e0b" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="大博记账" />
+
+    <!-- 图标 (带版本号防缓存) -->
+    <link rel="manifest" href="/manifest.json?v=3" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon.ico?v=3" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=3" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png?v=3" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=3" />
+    <link rel="mask-icon" href="/icons/icon-512.png?v=3" color="#f59e0b" />
   </head>
   <body>
     <div id="root"></div>

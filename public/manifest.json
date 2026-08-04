@@ -1,13 +1,22 @@
 {
   "name": "大博记账",
   "short_name": "大博记账",
-  "description": "个人记账应用 - 简单明了的支出管理",
+  "description": "个人记账应用 - 简单明了的收支管理",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#f9fafb",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#faf9f7",
   "theme_color": "#f59e0b",
   "orientation": "any",
+  "lang": "zh-CN",
+  "categories": ["finance", "productivity"],
   "icons": [
+    {
+      "src": "/icons/icon-48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
     {
       "src": "/icons/icon-192.png",
       "sizes": "192x192",
@@ -18,5 +27,6 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "screenshots": []
 }

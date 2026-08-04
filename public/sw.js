@@ -1,20 +1,14 @@
-// 大博记账 - Service Worker (离线缓存)
-const CACHE_NAME = 'dabo-accounting-v3'
+// 大博记账 - Service Worker (PWA 离线支持)
+const CACHE_NAME = 'dabo-accounting-v4'
 
-// 需要预缓存的文件（构建时自动更新）
-const PRECACHE_URLS = [
-  '/',
-  '/manifest.json',
-]
-
-// 安装：预缓存核心文件
+// 安装：预缓存所有静态资源
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(PRECACHE_URLS)
+    caches.open(CACHE_NAME).then(async (cache) => {
+      // 缓存主页和 manifest
+      await cache.addAll(['/', '/manifest.json'])
     })
   )
-  // 立即激活，不等待旧 SW
   self.skipWaiting()
 })
 
@@ -32,7 +26,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim()
 })
 
-// 请求拦截：缓存优先策略
+// 请求拦截：缓存优先 + 网络更新
 self.addEventListener('fetch', (event) => {
   // 跳过 chrome-extension 和非 GET 请求
   if (event.request.method !== 'GET') return
@@ -41,21 +35,27 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
+        // 后台更新缓存（Stale-While-Revalidate）
+        const fetchPromise = fetch(event.request).then((response) => {
+          if (response && response.status === 200 && response.type === 'basic') {
+            const responseToCache = response.clone()
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache)
+            })
+          }
+          return response
+        }).catch(() => null)
+
         return cachedResponse
       }
 
+      // 无缓存，走网络
       return fetch(event.request)
         .then((response) => {
-          // 不缓存 API 请求和非同源请求
-          if (
-            !response ||
-            response.status !== 200 ||
-            response.type !== 'basic'
-          ) {
+          if (!response || response.status !== 200 || response.type !== 'basic') {
             return response
           }
 
-          // 克隆响应并缓存
           const responseToCache = response.clone()
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseToCache)
@@ -64,11 +64,11 @@ self.addEventListener('fetch', (event) => {
           return response
         })
         .catch(() => {
-          // 网络失败时返回离线页面（对于导航请求）
+          // 离线且无缓存：返回首页（SPA 路由支持）
           if (event.request.mode === 'navigate') {
             return caches.match('/')
           }
-          return new Response('离线状态，请连接网络后重试', { status: 503 })
+          return new Response('离线状态', { status: 503 })
         })
     })
   )
