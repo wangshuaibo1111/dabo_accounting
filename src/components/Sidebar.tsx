@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { PageType } from '../types'
+import type { PageType, RecordType } from '../types'
 
 type NavKey = PageType | 'add'
 
@@ -19,11 +19,11 @@ const NAV_ITEMS: NavItem[] = [
 interface Props {
   activePage: PageType
   onNavigate: (page: PageType) => void
-  onAddExpense: () => void
-  onAddIncome: () => void
+  /** 用户点击"记支出"或"记收入"时触发，参数标明类型 */
+  onAddRecord: (type: RecordType) => void
 }
 
-export default function Sidebar({ activePage, onNavigate, onAddExpense, onAddIncome }: Props): JSX.Element {
+export default function Sidebar({ activePage, onNavigate, onAddRecord }: Props): JSX.Element {
   const [showAddMenu, setShowAddMenu] = useState(false)
 
   const handleNav = (key: NavKey) => {
@@ -67,13 +67,13 @@ export default function Sidebar({ activePage, onNavigate, onAddExpense, onAddInc
             <>
               <div className="fixed inset-0 z-30" onClick={() => setShowAddMenu(false)} />
               <div className="absolute left-12 top-0 z-40 bg-white rounded-2xl shadow-lg border border-gray-100 py-2 px-1 w-36 animate-in">
-                <button onClick={() => { onAddExpense(); setShowAddMenu(false) }}
+                <button onClick={() => { onAddRecord('expense'); setShowAddMenu(false) }}
                   className="flex items-center gap-2 w-full px-3 py-2.5 rounded-xl hover:bg-rose-50 transition-colors text-sm"
                 >
                   <span className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-base shrink-0">💸</span>
                   <span className="text-gray-700 font-medium">记支出</span>
                 </button>
-                <button onClick={() => { onAddIncome(); setShowAddMenu(false) }}
+                <button onClick={() => { onAddRecord('income'); setShowAddMenu(false) }}
                   className="flex items-center gap-2 w-full px-3 py-2.5 rounded-xl hover:bg-emerald-50 transition-colors text-sm"
                 >
                   <span className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-base shrink-0">💰</span>

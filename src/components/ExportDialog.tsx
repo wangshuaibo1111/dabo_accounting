@@ -10,6 +10,12 @@ interface Props {
 
 type ExportFormat = 'csv' | 'excel'
 
+/**
+ * 导出账单弹窗组件。
+ *
+ * 用户可选择导出格式（Excel 或 CSV）、时间范围（支持快捷选择本月/上月/近7天/近30天/全部），
+ * 预览区域实时显示将导出的记录数及收支合计。文件名自动包含日期范围。
+ */
 export default function ExportDialog({ records, onClose }: Props): JSX.Element {
   const today = new Date()
   const todayStr = formatISODate(today)

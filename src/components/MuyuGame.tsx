@@ -15,13 +15,13 @@ function loadTodayCount(): { date: string; count: number } {
       const data = JSON.parse(raw) as { date: string; count: number }
       if (data.date === getTodayKey()) return data
     }
-  } catch { /* ignore */ }
+  } catch { console.warn('读取木鱼计数失败，已重置') }
   return { date: getTodayKey(), count: 0 }
 }
 
 function saveTodayCount(data: { date: string; count: number }): void {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) }
-  catch { /* ignore */ }
+  catch { console.warn('保存木鱼计数失败') }
 }
 
 // ========== 精密木鱼音效合成 ==========
@@ -136,7 +136,7 @@ function playMuyuSound(): void {
     gainNode.connect(ctx.destination)
     source.start(0)
   } catch {
-    // 静默失败
+    console.warn('播放木鱼音效失败（AudioContext 可能未初始化）')
   }
 }
 

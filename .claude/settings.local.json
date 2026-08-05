@@ -136,11 +136,24 @@
       "Bash(git push *)",
       "Bash(mkdir -p \"$HOME/.claude/skills/unit-test\")",
       "Bash(npx vitest *)",
-      "Edit(~/.claude/skills/unit-test/**)"
+      "Edit(~/.claude/skills/unit-test/**)",
+      "Bash(mkdir -p \"d:/Code/VibeCoding/大博记账APP/.claude/agents\")",
+      "Bash(node -e \"try { require.resolve\\('vitest'\\); console.log\\('已安装'\\) } catch\\(e\\) { console.log\\('未安装'\\) }\")",
+      "Bash(mkdir -p \"$HOME/.claude/skills/comment-check\")",
+      "Edit(~/.claude/skills/comment-check/**)",
+      "Bash(mv \"$HOME/.claude/skills/comment-check\" \"$HOME/.claude/skills/comments-check\")",
+      "Read(//c/Users/22856/.claude/skills/comments-check/**)",
+      "Edit(~/.claude/skills/comments-check/**)",
+      "Bash(mkdir -p \"$HOME/.claude/skills/security-audit\")",
+      "Edit(~/.claude/skills/security-audit/**)",
+      "Bash(npm audit *)",
+      "Bash(npx tsc *)"
     ],
     "additionalDirectories": [
       "\\tmp",
-      "C:\\Users\\22856\\.claude\\skills"
+      "C:\\Users\\22856\\.claude\\skills",
+      "d:\\Code\\VibeCoding\\大博记账APP\\.claude",
+      "C:\\Users\\22856\\.claude\\skills\\comment-check"
     ]
   }
 }

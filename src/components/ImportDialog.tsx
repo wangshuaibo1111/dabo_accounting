@@ -11,6 +11,12 @@ interface Props {
 
 type Step = 'select' | 'preview' | 'done'
 
+/**
+ * 导入 CSV 账单弹窗组件。
+ *
+ * 分三步引导用户：① 选择文件（支持拖拽或点击上传）→ ② 预览识别结果（展示解析出的记录和错误行）
+ * → ③ 确认导入。解析出错的行会详细列出原因，帮助用户修复 CSV 文件后重试。
+ */
 export default function ImportDialog({ onImport, onClose }: Props): JSX.Element {
   const [step, setStep] = useState<Step>('select')
   const [isDragging, setIsDragging] = useState(false)

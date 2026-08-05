@@ -4,6 +4,12 @@ interface Props {
   onOpenExport: () => void
 }
 
+/**
+ * 设置页面组件。
+ *
+ * 集中展示应用的设置入口：管理分类、导入 CSV、导出账单。
+ * 每个入口以卡片形式呈现，点击后触发父组件传入的回调。
+ */
 export default function SettingsPage({ onOpenCategoryManager, onOpenImport, onOpenExport }: Props): JSX.Element {
   const items = [
     {

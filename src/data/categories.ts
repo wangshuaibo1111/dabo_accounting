@@ -42,27 +42,29 @@ export const incomeCategories: Category[] = [
   { name: '其他收入', icon: '📦', children: ['临时收入'] },
 ]
 
-// 获取分类列表
+/** 根据类型获取对应的预置分类列表（支出 11 个、收入 5 个） */
 export function getCategories(type: 'expense' | 'income'): Category[] {
   return type === 'expense' ? expenseCategories : incomeCategories
 }
 
+/** 获取某类型下所有一级分类的名称列表 */
 export function getCategoryL1List(type: 'expense' | 'income'): string[] {
   return getCategories(type).map((c) => c.name)
 }
 
+/** 获取某类型下指定一级分类的二级子分类列表。找不到该分类时返回空数组 */
 export function getCategoryL2List(type: 'expense' | 'income', categoryL1: string): string[] {
   const cat = getCategories(type).find((c) => c.name === categoryL1)
   return cat ? cat.children : []
 }
 
-// 判断某个分类名是否为预置分类
+/** 判断一个分类名是否是系统预置的（非用户自定义）。预置分类不可编辑或删除 */
 export function isPresetCategory(name: string, type: 'expense' | 'income'): boolean {
   const cats = type === 'expense' ? expenseCategories : incomeCategories
   return cats.some((c) => c.name === name)
 }
 
-// 合并预置 + 用户自定义分类
+/** 将系统预置分类和用户自定义分类合并为一个列表。预置的在前，用户自建的在后 */
 export function mergeCategories(
   type: 'expense' | 'income',
   userCategories: { id: string; name: string; icon: string; children: string[] }[]
@@ -85,7 +87,7 @@ export function mergeCategories(
   return [...presets, ...customs]
 }
 
-// 仅获取用户可编辑的分类（即非预置分类）
+/** 仅返回用户自己创建的分类（预置分类不在其中），用于分类管理页面 */
 export function getEditableCategories(
   _type: 'expense' | 'income',
   userCategories: { id: string; name: string; icon: string; children: string[] }[]
@@ -99,6 +101,7 @@ export function getEditableCategories(
   }))
 }
 
+/** 根据一级分类名称查找对应的图标。先在支出中找，再在收入中找，都找不到返回默认图标 📦 */
 export function getCategoryIcon(categoryL1: string): string {
   // 先从支出分类找
   let cat = expenseCategories.find((c) => c.name === categoryL1)

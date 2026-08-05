@@ -3,6 +3,9 @@ import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tool
 import type { CategoryStats, DailyStats } from '../types'
 import { getCategoryIcon } from '../data/categories'
 
+// Recharts 饼图标签回调的参数类型
+interface PieLabelProps { name?: string; percent?: number }
+
 // 饼图配色
 const PIE_COLORS = [
   '#06b6d4', '#10b981', '#f59e0b', '#f43f5e', '#8b5cf6',
@@ -18,6 +21,12 @@ interface Props {
 
 type ChartTab = 'expense-pie' | 'income-pie' | 'daily-line'
 
+/**
+ * 统计面板组件。
+ *
+ * 提供三种图表视图：支出分类饼图、收入分类饼图、每日收支折线图。
+ * 用户可切换查看，折线图支持选择近7天/14天/30天。
+ */
 export default function StatisticsPanel({ expenseCategoryStats, incomeCategoryStats, dailyStats }: Props): JSX.Element {
   const [tab, setTab] = useState<ChartTab>('expense-pie')
   const [lineDays, setLineDays] = useState(7)
@@ -82,7 +91,7 @@ export default function StatisticsPanel({ expenseCategoryStats, incomeCategorySt
                 cx="50%" cy="50%"
                 innerRadius={50} outerRadius={90}
                 paddingAngle={3} dataKey="value"
-                label={(props: any) =>
+                label={(props: PieLabelProps) =>
                   `${props.name || ''} ${((props.percent ?? 0) * 100).toFixed(0)}%`
                 }
               >
@@ -110,7 +119,7 @@ export default function StatisticsPanel({ expenseCategoryStats, incomeCategorySt
                 cx="50%" cy="50%"
                 innerRadius={50} outerRadius={90}
                 paddingAngle={3} dataKey="value"
-                label={(props: any) =>
+                label={(props: PieLabelProps) =>
                   `${props.name || ''} ${((props.percent ?? 0) * 100).toFixed(0)}%`
                 }
               >

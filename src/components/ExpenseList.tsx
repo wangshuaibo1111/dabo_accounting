@@ -7,6 +7,7 @@ interface Props {
   getCategoryIcon: (categoryL1: string) => string
 }
 
+/** 将记录按日期分组，返回 日期 → 当天记录列表 的映射 */
 function groupByDate(records: AppRecord[]): Map<string, AppRecord[]> {
   const groups = new Map<string, AppRecord[]>()
   for (const r of records) {
@@ -17,6 +18,7 @@ function groupByDate(records: AppRecord[]): Map<string, AppRecord[]> {
   return groups
 }
 
+/** 把日期字符串转为友好的中文显示：今天、昨天、X月X日 周X */
 function formatDateLabel(dateStr: string): string {
   const today = new Date()
   const date = new Date(dateStr)
@@ -29,7 +31,14 @@ function formatDateLabel(dateStr: string): string {
   return `${date.getMonth() + 1}月${date.getDate()}日 周${weekDay}`
 }
 
+/**
+ * 账单列表组件。
+ *
+ * 按日期分组展示所有记录（今天/昨天/具体日期），每组顶部显示当日收支合计。
+ * 每条记录显示分类图标、小类名、大类标签、备注、金额，鼠标悬停时出现删除按钮。
+ */
 export default function ExpenseList({ records, onDelete, getCategoryIcon }: Props): JSX.Element {
+  // 将记录按日期分组
   const groups = groupByDate(records)
 
   return (

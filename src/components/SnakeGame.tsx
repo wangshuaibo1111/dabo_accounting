@@ -29,11 +29,11 @@ const DIRECTION_KEYS: Record<string, Direction> = {
 }
 
 function getHighScore(): number {
-  try { return parseInt(localStorage.getItem(HIGH_SCORE_KEY) || '0', 10) || 0 } catch { return 0 }
+  try { return parseInt(localStorage.getItem(HIGH_SCORE_KEY) || '0', 10) || 0 } catch { console.warn('读取贪吃蛇最高分失败'); return 0 }
 }
 
 function saveHighScore(score: number): void {
-  try { localStorage.setItem(HIGH_SCORE_KEY, String(score)) } catch { /* ignore */ }
+  try { localStorage.setItem(HIGH_SCORE_KEY, String(score)) } catch { console.warn('保存贪吃蛇最高分失败') }
 }
 
 function createInitialSnake(): Point[] {

@@ -9,8 +9,7 @@ import { formatISODate, getNextMonthStart } from './lib/date'
 import { safeParseJSONArray } from './lib/utils'
 import type { Record as AppRecord, NewRecord, FilterOptions, MonthlyStats, CategoryStats, DailyStats, PageType } from './types'
 import Sidebar from './components/Sidebar'
-import AddExpenseDialog from './components/AddExpenseDialog'
-import AddIncomeDialog from './components/AddIncomeDialog'
+import AddRecordDialog from './components/AddRecordDialog'
 import ExpenseList from './components/ExpenseList'
 import FilterBar from './components/FilterBar'
 import StatisticsPanel from './components/StatisticsPanel'
@@ -26,8 +25,8 @@ function App(): JSX.Element {
   const [dbError, setDbError] = useState<string | null>(null)
   const [records, setRecords] = useState<AppRecord[]>([])
   const [monthlyStats, setMonthlyStats] = useState<MonthlyStats | null>(null)
-  const [showExpenseDialog, setShowExpenseDialog] = useState(false)
-  const [showIncomeDialog, setShowIncomeDialog] = useState(false)
+  // null = 不弹窗, 'expense' = 记支出, 'income' = 记收入
+  const [activeDialog, setActiveDialog] = useState<'expense' | 'income' | null>(null)
   const [showExportDialog, setShowExportDialog] = useState(false)
   const [showImportDialog, setShowImportDialog] = useState(false)
   const [showCategoryManager, setShowCategoryManager] = useState(false)
@@ -82,17 +81,22 @@ function App(): JSX.Element {
     setFilters((f) => ({ ...f }))
   }
 
-  // 批量导入（带回滚保护）
+  // 批量导入
   const handleBatchImport = (newRecords: NewRecord[]) => {
-    try {
-      for (const r of newRecords) {
+    let errorCount = 0
+    for (const r of newRecords) {
+      try {
         addRecord(r)
+      } catch (e) {
+        errorCount++
+        console.error('导入单条记录失败:', r, e)
       }
-      setFilters((f) => ({ ...f }))
-    } catch (e) {
-      console.error('批量导入失败:', e)
-      // 已导入的部分留在数据库中，刷新显示实际状态
-      setFilters((f) => ({ ...f }))
+    }
+    // 刷新列表显示实际导入结果
+    setFilters((f) => ({ ...f }))
+    // 如果有失败的记录，弹窗提示用户
+    if (errorCount > 0) {
+      alert(`导入完成：${newRecords.length - errorCount} 条成功，${errorCount} 条失败。请查看控制台了解详情。`)
     }
   }
 
@@ -239,8 +243,7 @@ function App(): JSX.Element {
       <Sidebar
         activePage={activePage}
         onNavigate={handleNavigate}
-        onAddExpense={() => setShowExpenseDialog(true)}
-        onAddIncome={() => setShowIncomeDialog(true)}
+        onAddRecord={(type) => setActiveDialog(type)}
       />
 
       <main className="flex-1 ml-14 px-5 py-5 flex justify-center">
@@ -250,16 +253,13 @@ function App(): JSX.Element {
       </main>
 
       {/* 弹窗 */}
-      {showExpenseDialog && (
-        <AddExpenseDialog categories={mergedExpenseCategories} today={todayStr}
-          onSave={(data) => { handleAddRecord(data); setShowExpenseDialog(false) }}
-          onClose={() => setShowExpenseDialog(false)}
-        />
-      )}
-      {showIncomeDialog && (
-        <AddIncomeDialog categories={mergedIncomeCategories} today={todayStr}
-          onSave={(data) => { handleAddRecord(data); setShowIncomeDialog(false) }}
-          onClose={() => setShowIncomeDialog(false)}
+      {activeDialog && (
+        <AddRecordDialog
+          recordType={activeDialog}
+          categories={activeDialog === 'expense' ? mergedExpenseCategories : mergedIncomeCategories}
+          today={todayStr}
+          onSave={(data) => { handleAddRecord(data); setActiveDialog(null) }}
+          onClose={() => setActiveDialog(null)}
         />
       )}
       {showExportDialog && (

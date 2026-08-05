@@ -22,8 +22,13 @@ export interface ImportError {
   message: string
 }
 
-// 解析 CSV 文本
-function parseCSVText(text: string): CSVRow[] {
+/**
+ * 将 CSV 文本解析为行对象列表。
+ *
+ * 自动处理 UTF-8 BOM 头（防止 Excel 导出的文件首列出现乱码）、
+ * 跳过空行、兼容 CRLF 换行符。每行转为包含 type/amount/categoryL1 等字段的对象。
+ */
+export function parseCSVText(text: string): CSVRow[] {
   // 移除 BOM
   if (text.charCodeAt(0) === 0xfeff) {
     text = text.slice(1)
@@ -66,7 +71,7 @@ function parseCSVText(text: string): CSVRow[] {
 }
 
 // 解析 CSV 行（处理引号包裹的字段）
-function parseCSVLine(line: string): string[] {
+export function parseCSVLine(line: string): string[] {
   const result: string[] = []
   let current = ''
   let inQuotes = false
@@ -100,7 +105,7 @@ function parseCSVLine(line: string): string[] {
 }
 
 // 校验单行数据
-function validateRow(row: CSVRow, rowNum: number, validL1Names: Set<string>): ImportError[] {
+export function validateRow(row: CSVRow, rowNum: number, validL1Names: Set<string>): ImportError[] {
   const errors: ImportError[] = []
 
   // 类型
@@ -135,7 +140,7 @@ function validateRow(row: CSVRow, rowNum: number, validL1Names: Set<string>): Im
 }
 
 // 获取全部有效一级分类名称
-function getAllCategoryL1Names(): Set<string> {
+export function getAllCategoryL1Names(): Set<string> {
   const names = new Set<string>()
   expenseCategories.forEach((c) => names.add(c.name))
   incomeCategories.forEach((c) => names.add(c.name))
@@ -196,7 +201,7 @@ export function parseCSVFile(file: File): Promise<ImportResult> {
 }
 
 // 获取默认二级分类
-function getDefaultL2(categoryL1: string, type: RecordType): string {
+export function getDefaultL2(categoryL1: string, type: RecordType): string {
   const cats = type === 'expense' ? expenseCategories : incomeCategories
   const cat = cats.find((c) => c.name === categoryL1)
   return cat?.children[0] || '其他'

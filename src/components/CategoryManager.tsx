@@ -19,6 +19,13 @@ interface Props {
   onCategoriesChanged: () => void
 }
 
+/**
+ * 分类管理页面组件。
+ *
+ * 用户可以新增、编辑、删除自己的自定义分类（一级分类 + 二级小类）。
+ * 预置分类（餐饮饮食、交通出行等）不可编辑或删除。
+ * 支持在支出和收入分类之间切换管理。
+ */
 export default function CategoryManager({ onClose, onCategoriesChanged }: Props): JSX.Element {
   const [tab, setTab] = useState<RecordType>('expense')
   const [userCats, setUserCats] = useState<UserCategoryRow[]>([])

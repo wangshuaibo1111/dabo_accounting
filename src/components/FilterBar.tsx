@@ -6,9 +6,18 @@ interface Props {
   categories: Category[]
 }
 
+/**
+ * 账单筛选栏组件。
+ *
+ * 提供五种筛选方式：开始日期、结束日期、一级分类、记录类型（支出/收入/全部）、关键词搜索。
+ * 任一筛选条件生效时，右上角出现"清除"按钮，一键重置所有条件。
+ * 筛选条件的变更会实时通过 onFilterChange 通知父组件重新查询数据。
+ */
 export default function FilterBar({ filters, onFilterChange, categories }: Props): JSX.Element {
+  // 判断是否有任何筛选条件已激活
   const hasActive = filters.startDate || filters.endDate || filters.categoryL1 || filters.keyword || filters.type !== 'all'
 
+  // 一键清除所有筛选条件，恢复默认状态
   const clearFilters = () => {
     onFilterChange({ startDate: null, endDate: null, categoryL1: null, keyword: '', type: 'all' })
   }

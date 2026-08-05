@@ -3,8 +3,14 @@ import type { Record } from '../types'
 
 // ========== CSV 导出 ==========
 
-function escapeCSV(value: string): string {
-  // 如果包含逗号、引号或换行，用引号包裹并转义内部引号
+/**
+ * 对 CSV 字段值进行安全转义。
+ *
+ * 如果字段内容包含逗号、引号或换行符，需要用双引号包裹，
+ * 同时把内容中的每个双引号替换为两个双引号（CSV 标准转义规则）。
+ * 普通文本直接原样返回。
+ */
+export function escapeCSV(value: string): string {
   if (value.includes(',') || value.includes('"') || value.includes('\n')) {
     return `"${value.replace(/"/g, '""')}"`
   }

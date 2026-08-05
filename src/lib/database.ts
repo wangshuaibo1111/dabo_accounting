@@ -9,7 +9,13 @@ const DB_STORAGE_KEY = 'dabo_accounting_db_v2'
 let SQL: SqlJsStatic | null = null
 let db: Database | null = null
 
-// 初始化 SQL.js 并加载/创建数据库
+/**
+ * 启动数据库。
+ *
+ * 加载 SQL.js（WebAssembly 版 SQLite），然后尝试从浏览器本地存储中恢复上次保存的数据库。
+ * 如果本地存储中没有数据或数据损坏，则创建一个全新的空数据库。
+ * 数据库文件通过 localStorage 以 Base64 编码保存。
+ */
 export async function initDatabase(): Promise<void> {
   if (db) return
 
@@ -27,7 +33,10 @@ export async function initDatabase(): Promise<void> {
       saveDatabase()
       return
     } catch {
-      console.warn('无法加载已保存的数据库，将创建新数据库')
+      // 数据库损坏时保留原始数据的备份，用户可通过技术支持尝试恢复
+      const backupKey = `${DB_STORAGE_KEY}_backup_${Date.now()}`
+      try { localStorage.setItem(backupKey, savedData) } catch { /* ignore */ }
+      console.warn('无法加载已保存的数据库，原始数据已备份至浏览器存储，将创建新数据库。备份键名：', backupKey)
     }
   }
 
@@ -72,13 +81,20 @@ function createTables(): void {
   db.run(`CREATE INDEX IF NOT EXISTS idx_user_categories_type ON user_categories(type)`)
 }
 
+/**
+ * 将内存中的数据库序列化为 Base64 字符串，存入浏览器本地存储。
+ * 这样用户刷新页面或关闭浏览器后，数据不会丢失。
+ */
 function saveDatabase(): void {
   if (!db) return
+  // 导出整个 SQLite 数据库为二进制数组
   const data = db.export()
   try {
     localStorage.setItem(DB_STORAGE_KEY, uint8ArrayToBase64(data))
   } catch (e) {
-    console.error('保存数据库失败:', e)
+    // 可能是 localStorage 满了（上限约5MB），提醒用户
+    console.error('保存数据库失败（可能是存储空间不足）:', e)
+    throw new Error('数据保存失败，请检查浏览器存储空间')
   }
 }
 
@@ -87,8 +103,9 @@ function getDB(): Database {
   return db
 }
 
-// ========== CRUD ==========
+// ========== 数据的增删改查（CRUD）==========
 
+/** 新增一条记录，自动生成唯一 ID 和时间戳，保存后返回完整记录 */
 export function addRecord(record: NewRecord): Record {
   const database = getDB()
   const now = new Date().toISOString()
@@ -106,14 +123,15 @@ export function addRecord(record: NewRecord): Record {
   return full
 }
 
-export function deleteRecord(id: string): boolean {
+/** 根据 ID 删除一条记录。注意：即使 ID 不存在也不会报错 */
+export function deleteRecord(id: string): void {
   getDB().run('DELETE FROM records WHERE id = ?', [id])
   saveDatabase()
-  return true
 }
 
 // ========== 查询 ==========
 
+/** 查询记录时可用的筛选条件 */
 export interface QueryOptions {
   startDate?: string | null
   endDate?: string | null
@@ -122,6 +140,7 @@ export interface QueryOptions {
   type?: RecordType | 'all'
 }
 
+/** 按条件查询记录，未指定条件时返回全部。结果按日期+创建时间倒序排列 */
 export function queryRecords(options: QueryOptions = {}): Record[] {
   const database = getDB()
   const conditions: string[] = []
