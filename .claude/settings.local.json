@@ -132,7 +132,11 @@
       "Edit(~/.claude/skills/git-save/**)",
       "Edit(~/.claude/skills/reload-skills/**)",
       "Read(//c/Users/22856/.claude/skills/reload-skills/**)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(mkdir -p \"$HOME/.claude/skills/unit-test\")",
+      "Bash(npx vitest *)",
+      "Edit(~/.claude/skills/unit-test/**)"
     ],
     "additionalDirectories": [
       "\\tmp",
