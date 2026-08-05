@@ -34,10 +34,12 @@ export default function Sidebar({ activePage, onNavigate, onAddExpense, onAddInc
   const getBtnClass = (item: NavItem): string => {
     const isAdd = item.key === 'add'
     const isSnake = item.key === 'snake'
+    const isMuyu = item.key === 'muyu'
     const isActive = item.key === activePage
 
     if (isAdd) return 'w-10 h-10 rounded-xl flex items-center justify-center relative transition-all bg-emerald-50 text-emerald-500 hover:bg-emerald-100 hover:text-emerald-600'
     if (isSnake && isActive) return 'w-10 h-10 rounded-xl flex items-center justify-center relative transition-all bg-amber-50 text-amber-500 hover:bg-amber-100 hover:text-amber-600'
+    if (isMuyu && isActive) return 'w-10 h-10 rounded-xl flex items-center justify-center relative transition-all bg-orange-50 text-orange-500 hover:bg-orange-100 hover:text-orange-600'
     if (isActive) return 'w-10 h-10 rounded-xl flex items-center justify-center relative transition-all bg-cyan-50 text-cyan-600'
     return 'w-10 h-10 rounded-xl flex items-center justify-center relative transition-all text-gray-400 hover:bg-gray-100 hover:text-gray-700'
   }
@@ -95,6 +97,18 @@ export default function Sidebar({ activePage, onNavigate, onAddExpense, onAddInc
         <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-gray-800 text-white text-xs px-2.5 py-1 rounded-md whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50
           before:content-[''] before:absolute before:left-[-5px] before:top-1/2 before:-translate-y-1/2 before:border-5 before:border-transparent before:border-r-gray-800"
         >贪吃蛇</span>
+      </button>
+
+      {/* 敲木鱼 */}
+      <button
+        onClick={() => onNavigate('muyu')}
+        className={`group ${getBtnClass({ key: 'muyu', icon: '🪵', label: '敲木鱼' })}`}
+        title="敲木鱼"
+      >
+        <span className="text-xl">🪵</span>
+        <span className="absolute left-12 top-1/2 -translate-y-1/2 bg-gray-800 text-white text-xs px-2.5 py-1 rounded-md whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50
+          before:content-[''] before:absolute before:left-[-5px] before:top-1/2 before:-translate-y-1/2 before:border-5 before:border-transparent before:border-r-gray-800"
+        >敲木鱼</span>
       </button>
     </nav>
   )

@@ -84,10 +84,35 @@
       "Bash(npx kill-port *)",
       "Bash(netstat -ano)",
       "Bash(taskkill //PID 40716 //F)",
-      "Bash(taskkill //PID 31260 //F)"
+      "Bash(taskkill //PID 31260 //F)",
+      "Bash(git merge *)",
+      "Bash(git stash *)",
+      "Bash(mkdir -p \"d:/Code/VibeCoding/大博记账APP/.claude/skills\")",
+      "Read(//c/Users/22856/.claude/**)",
+      "Read(//c/Users/22856/.claude/plugins/**)",
+      "Read(//c/Users/22856/.claude/ide/**)",
+      "WebSearch",
+      "Bash(mkdir -p \"d:/Code/VibeCoding/大博记账APP/.claude/skills/new-feature\")",
+      "Bash(mv \"d:/Code/VibeCoding/大博记账APP/.claude/skills/new-feature.md\" \"d:/Code/VibeCoding/大博记账APP/.claude/skills/new-feature/SKILL.md\")",
+      "Edit(/.claude/skills/new-feature/**)",
+      "WebFetch(domain:freesoundsite.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl -sL -o \"d:/Code/VibeCoding/大博记账APP/public/sounds/muyu-test.mp3\" -w \"HTTP %{http_code}, Size: %{size_download}\" \"https://cdn.freesound.org/previews/205/205999_3906320-lq.mp3\")",
+      "Bash(curl -sL \"https://freesound.org/people/the_very_Real_Horst/sounds/205999/\")",
+      "Bash(curl -sL \"https://api.github.com/repos/zhheo/MuYu-Audio-Heo/contents/\")",
+      "Bash(curl -sL -o \"d:/Code/VibeCoding/大博记账APP/public/sounds/muyu-hq.mp3\" -w \"HTTP %{http_code}, Size: %{size_download} bytes\\\\n\" \"https://cdn.freesound.org/previews/205/205999_3597112-hq.mp3\")",
+      "Bash(curl -sL \"https://sounddino.com/zh/effects/wooden/\")",
+      "Bash(curl -sL \"https://www.tosound.com/sound/sound-Yr6qMJBd/item-download\")",
+      "Bash(curl -sL \"https://tw.yisell.com/sound/wyXJduIPAIPIEtFk=.html\")",
+      "Bash(curl -sL \"https://api.github.com/repos/zhheo/MuYu-Audio-Heo/releases/latest\")",
+      "Bash(curl -sL -o \"d:/Code/VibeCoding/大博记账APP/public/sounds/muyu-knock.mp3\" -w \"HTTP %{http_code}, Size: %{size_download}\" \"https://preview.tosound.com:3321/preview?file=freesound%2F0%2F121%2F223711.mp3\")",
+      "Bash(curl -sL \"https://tw.yisell.com/sound/wyXJduIPAIPIEtFk=.html\" -H \"User-Agent: Mozilla/5.0\")",
+      "Bash(curl -sL \"https://sounddino.com/zh/effects/wooden/\" -H \"User-Agent: Mozilla/5.0\")",
+      "Bash(git commit -m 'feat: 新增敲木鱼小游戏 — Canvas粒子特效+合成木鱼音效 *)"
     ],
     "additionalDirectories": [
-      "C:\\Users\\22856\\.cargo"
+      "C:\\Users\\22856\\.cargo",
+      "d:\\Code\\VibeCoding\\大博记账APP\\.claude"
     ]
   }
 }

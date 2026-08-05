@@ -19,6 +19,7 @@ import ImportDialog from './components/ImportDialog'
 import CategoryManager from './components/CategoryManager'
 import SettingsPage from './components/SettingsPage'
 import SnakeGame from './components/SnakeGame'
+import MuyuGame from './components/MuyuGame'
 
 function App(): JSX.Element {
   const [dbReady, setDbReady] = useState(false)
@@ -204,6 +205,7 @@ function App(): JSX.Element {
       case 'stats': return statsContent
       case 'settings': return settingsContent
       case 'snake': return <div><h2 className="text-base font-semibold text-gray-700 mb-4">🐍 贪吃蛇</h2><SnakeGame /></div>
+      case 'muyu': return <div><h2 className="text-base font-semibold text-gray-700 mb-4">🪵 敲木鱼</h2><MuyuGame /></div>
       default: return homeContent
     }
   }
