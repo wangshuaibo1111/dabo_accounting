@@ -1,4 +1,5 @@
 import type { Record as AppRecord } from '../types'
+import { formatISODate, getDaysAgo } from '../lib/date'
 
 interface Props {
   records: AppRecord[]
@@ -19,10 +20,8 @@ function groupByDate(records: AppRecord[]): Map<string, AppRecord[]> {
 function formatDateLabel(dateStr: string): string {
   const today = new Date()
   const date = new Date(dateStr)
-  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
-  const yesterday = new Date(today)
-  yesterday.setDate(yesterday.getDate() - 1)
-  const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`
+  const todayStr = formatISODate(today)
+  const yesterdayStr = getDaysAgo(1)
 
   if (dateStr === todayStr) return '今天'
   if (dateStr === yesterdayStr) return '昨天'

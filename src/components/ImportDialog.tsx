@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react'
 import type { NewRecord } from '../types'
 import { parseCSVFile, type ImportResult } from '../lib/import'
+import { downloadFile } from '../lib/export'
 import { getCategoryIcon } from '../data/categories'
 
 interface Props {
@@ -62,15 +63,7 @@ export default function ImportDialog({ onImport, onClose }: Props): JSX.Element 
   // 下载模板
   const downloadTemplate = () => {
     const template = '类型,金额,一级分类,二级分类,日期,备注\n支出,25.00,餐饮饮食,三餐,2024-08-04,食堂午饭\n收入,5000.00,工资收入,月薪,2024-08-01,8月工资'
-    const blob = new Blob(['﻿' + template], { type: 'text/csv;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = '大博记账_导入模板.csv'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
+    downloadFile('﻿' + template, '大博记账_导入模板.csv', 'text/csv;charset=utf-8')
   }
 
   return (

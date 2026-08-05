@@ -1,3 +1,6 @@
+// 页面导航类型
+export type PageType = 'home' | 'stats' | 'settings' | 'snake'
+
 // 记录类型
 export type RecordType = 'expense' | 'income'
 

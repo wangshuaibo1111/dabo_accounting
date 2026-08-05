@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import type { Record } from '../types'
 import { exportCSV, exportExcel } from '../lib/export'
+import { formatISODate, getMonthStart, getDaysAgo, getLastMonthEnd } from '../lib/date'
 
 interface Props {
   records: Record[]
@@ -11,10 +12,8 @@ type ExportFormat = 'csv' | 'excel'
 
 export default function ExportDialog({ records, onClose }: Props): JSX.Element {
   const today = new Date()
-  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
-
-  // 默认导出本月
-  const monthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`
+  const todayStr = formatISODate(today)
+  const monthStart = getMonthStart(today.getFullYear(), today.getMonth() + 1)
 
   const [startDate, setStartDate] = useState<string>(monthStart)
   const [endDate, setEndDate] = useState<string>(todayStr)
@@ -154,22 +153,10 @@ export default function ExportDialog({ records, onClose }: Props): JSX.Element {
   )
 }
 
-// ===== 日期工具 =====
-
-function getDaysAgo(n: number): string {
-  const d = new Date()
-  d.setDate(d.getDate() - n)
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
+// ===== 日期工具（封装共享函数） =====
 
 function getLastMonthStart(): string {
   const d = new Date()
   d.setMonth(d.getMonth() - 1, 1)
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`
-}
-
-function getLastMonthEnd(): string {
-  const d = new Date()
-  d.setDate(0) // 上个月最后一天
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  return getMonthStart(d.getFullYear(), d.getMonth() + 1)
 }

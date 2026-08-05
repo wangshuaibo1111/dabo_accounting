@@ -4,6 +4,7 @@ import {
   type UserCategoryRow,
 } from '../lib/database'
 import { mergeCategories, type CategoryInfo } from '../data/categories'
+import { safeParseJSONArray } from '../lib/utils'
 import type { RecordType } from '../types'
 
 // 常用图标备选
@@ -37,7 +38,7 @@ export default function CategoryManager({ onClose, onCategoriesChanged }: Props)
 
   const allCategories = mergeCategories(
     tab,
-    userCats.map((uc) => ({ id: uc.id, name: uc.name, icon: uc.icon, children: safeParseJSON(uc.children, ['其他']) }))
+    userCats.map((uc) => ({ id: uc.id, name: uc.name, icon: uc.icon, children: safeParseJSONArray(uc.children, ['其他']) }))
   )
 
   const startEdit = (cat: CategoryInfo) => {
@@ -47,7 +48,7 @@ export default function CategoryManager({ onClose, onCategoriesChanged }: Props)
     setEditMode(uc.id)
     setEditName(uc.name)
     setEditIcon(uc.icon)
-    setEditChildren(safeParseJSON(uc.children, ['其他']))
+    setEditChildren(safeParseJSONArray(uc.children, ['其他']))
   }
 
   const startAdd = () => {
@@ -270,14 +271,4 @@ export default function CategoryManager({ onClose, onCategoriesChanged }: Props)
       )}
     </div>
   )
-}
-
-function safeParseJSON(json: string, fallback: string[]): string[] {
-  try {
-    const parsed = JSON.parse(json)
-    if (Array.isArray(parsed) && parsed.length > 0) return parsed
-    return fallback
-  } catch {
-    return fallback
-  }
 }
