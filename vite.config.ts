@@ -1,21 +1,11 @@
-import { defineConfig } from "vite"
-import react from "@vitejs/plugin-react"
-import electron from "vite-plugin-electron/simple"
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    electron({
-      main: {
-        entry: "electron/main.ts",
-      },
-      preload: {
-        input: "electron/preload.ts",
-      },
-    }),
-  ],
+  plugins: [react()],
 
+  // prevent vite from obscuring rust errors
   clearScreen: false,
   server: {
     port: 1420,
@@ -24,7 +14,4 @@ export default defineConfig({
       ignored: ["**/src-tauri/**"],
     },
   },
-  build: {
-    outDir: "dist",
-  },
-})
+});
