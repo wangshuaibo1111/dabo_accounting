@@ -3,13 +3,40 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "main": "dist-electron/main.js",
   "scripts": {
-    "dev": "vite --open",
+    "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "package": "npm run build && electron-builder --win portable",
     "android:add": "npx cap add android",
     "android:sync": "npm run build && npx cap sync android",
     "android:open": "npx cap open android"
+  },
+  "build": {
+    "appId": "com.dabo.accounting",
+    "productName": "大博记账",
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/icons/icon.png"
+    },
+    "portable": {
+      "artifactName": "大博记账_${version}.exe"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*"
+    ]
   },
   "dependencies": {
     "@capacitor/android": "^8.5.0",
@@ -31,12 +58,15 @@
     "autoprefixer": "^10.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "electron": "^43.3.0",
+    "electron-builder": "^26.15.3",
     "lucide-react": "^0.460.0",
     "postcss": "^8.4.0",
     "tailwind-merge": "^2.5.0",
     "tailwindcss": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.6.0",
-    "vite": "^6.0.0"
+    "vite": "^6.0.0",
+    "vite-plugin-electron": "^1.1.1"
   }
 }

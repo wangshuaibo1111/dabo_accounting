@@ -108,11 +108,35 @@
       "Bash(curl -sL -o \"d:/Code/VibeCoding/大博记账APP/public/sounds/muyu-knock.mp3\" -w \"HTTP %{http_code}, Size: %{size_download}\" \"https://preview.tosound.com:3321/preview?file=freesound%2F0%2F121%2F223711.mp3\")",
       "Bash(curl -sL \"https://tw.yisell.com/sound/wyXJduIPAIPIEtFk=.html\" -H \"User-Agent: Mozilla/5.0\")",
       "Bash(curl -sL \"https://sounddino.com/zh/effects/wooden/\" -H \"User-Agent: Mozilla/5.0\")",
-      "Bash(git commit -m 'feat: 新增敲木鱼小游戏 — Canvas粒子特效+合成木鱼音效 *)"
+      "Bash(git commit -m 'feat: 新增敲木鱼小游戏 — Canvas粒子特效+合成木鱼音效 *)",
+      "Bash(mkdir -p \"d:/Code/VibeCoding/大博记账APP/.claude/skills/run-app\")",
+      "Edit(/.claude/skills/run-app/**)",
+      "Bash(cmd //c \"netstat -ano | findstr :5173\")",
+      "Bash(cmd //c \"netstat -ano | findstr :1420\")",
+      "Bash(taskkill //PID 26280 //F)",
+      "Bash(mkdir -p \"d:/Code/VibeCoding/大博记账APP/.claude/skills/rebuild-app\")",
+      "Edit(/.claude/skills/rebuild-app/**)",
+      "Bash(cmd //c \"rd /s /q d:\\\\\\\\Code\\\\\\\\VibeCoding\\\\\\\\大博记账APP\\\\\\\\.electron-test\")",
+      "Bash(rm -rf node_modules/electron)",
+      "Bash(ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ npm install electron --save-dev --registry=https://registry.npmmirror.com)",
+      "Bash(ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ npx electron --version)",
+      "Bash(ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ npx vite)",
+      "Bash(cmd //c \"tasklist | findstr -i electron\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(node_modules/electron/dist/electron.exe --version)",
+      "Bash(cmd //c \"node_modules\\\\\\\\electron\\\\\\\\dist\\\\\\\\electron.exe --version\")",
+      "Bash(curl -s \"https://npmmirror.com/mirrors/electron/\")",
+      "Bash(sort -t. -k1,1n -k2,2n -k3,3n)",
+      "Bash(node -e \"console.log\\(typeof require\\('./node_modules/electron'\\), Object.keys\\(require\\('./node_modules/electron'\\)\\).slice\\(0,5\\)\\)\")",
+      "Bash(ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ node node_modules/electron/install.js)",
+      "Bash(curl -sI \"https://npmmirror.com/mirrors/electron/v28.3.3/electron-v28.3.3-win32-x64.zip\")",
+      "Bash(curl -L -o electron.zip \"https://npmmirror.com/mirrors/electron/v28.3.3/electron-v28.3.3-win32-x64.zip\")",
+      "Bash(unzip -o electron.zip -d node_modules/electron/dist/)"
     ],
     "additionalDirectories": [
       "C:\\Users\\22856\\.cargo",
-      "d:\\Code\\VibeCoding\\大博记账APP\\.claude"
+      "d:\\Code\\VibeCoding\\大博记账APP\\.claude",
+      "d:\\Code\\VibeCoding\\大博记账APP\\.claude\\skills"
     ]
   }
 }
