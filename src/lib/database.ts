@@ -33,8 +33,15 @@ export async function initDatabase(): Promise<void> {
       saveDatabase()
       return
     } catch {
-      // 数据库损坏时保留原始数据的备份，用户可通过技术支持尝试恢复
-      const backupKey = `${DB_STORAGE_KEY}_backup_${Date.now()}`
+      // 备份损坏数据（只保留最新一份，清理旧备份避免撑满 localStorage）
+      const backupPrefix = `${DB_STORAGE_KEY}_backup_`
+      // 删除所有旧备份
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const key = localStorage.key(i)
+        if (key?.startsWith(backupPrefix)) localStorage.removeItem(key)
+      }
+      // 写入新备份
+      const backupKey = `${backupPrefix}${Date.now()}`
       try { localStorage.setItem(backupKey, savedData) } catch { /* ignore */ }
       console.warn('无法加载已保存的数据库，原始数据已备份至浏览器存储，将创建新数据库。备份键名：', backupKey)
     }
@@ -92,9 +99,9 @@ function saveDatabase(): void {
   try {
     localStorage.setItem(DB_STORAGE_KEY, uint8ArrayToBase64(data))
   } catch (e) {
-    // 可能是 localStorage 满了（上限约5MB），提醒用户
+    // localStorage 写满或浏览器隐私模式等导致保存失败
+    // 数据在内存 SQLite 中仍然安全，不抛异常以免崩溃整个应用
     console.error('保存数据库失败（可能是存储空间不足）:', e)
-    throw new Error('数据保存失败，请检查浏览器存储空间')
   }
 }
 

@@ -67,10 +67,11 @@ export default function AddRecordDialog({ recordType, categories, today, onSave,
   const focusRing = FOCUS_RING[recordType]
 
   // 切换一级分类时，自动选中该分类的第一个子分类
+  // 无论新分类有没有子分类，都要更新 categoryL2——避免残留旧分类的值
   const handleCategoryL1Change = (l1: string) => {
     setCategoryL1(l1)
     const cat = categories.find((c) => c.name === l1)
-    if (cat?.children.length) setCategoryL2(cat.children[0])
+    setCategoryL2(cat?.children.length ? cat.children[0] : '')
   }
 
   // 点击保存：校验必填字段，然后调用父组件传入的 onSave

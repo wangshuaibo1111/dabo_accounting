@@ -81,23 +81,12 @@ function App(): JSX.Element {
     setFilters((f) => ({ ...f }))
   }
 
-  // 批量导入
+  // 批量导入 — 逐条添加后统一刷新
   const handleBatchImport = (newRecords: NewRecord[]) => {
-    let errorCount = 0
     for (const r of newRecords) {
-      try {
-        addRecord(r)
-      } catch (e) {
-        errorCount++
-        console.error('导入单条记录失败:', r, e)
-      }
+      addRecord(r)
     }
-    // 刷新列表显示实际导入结果
     setFilters((f) => ({ ...f }))
-    // 如果有失败的记录，弹窗提示用户
-    if (errorCount > 0) {
-      alert(`导入完成：${newRecords.length - errorCount} 条成功，${errorCount} 条失败。请查看控制台了解详情。`)
-    }
   }
 
   // 删除

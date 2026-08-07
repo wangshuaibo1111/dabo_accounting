@@ -113,13 +113,13 @@ function buildMuyuBuffer(ctx: AudioContext): AudioBuffer {
   return buffer
 }
 
-function playMuyuSound(): void {
+async function playMuyuSound(): Promise<void> {
   try {
     const ctx = getAudioContext()
 
-    // 浏览器策略：用户交互前 AudioContext 可能被挂起
+    // 浏览器策略：用户交互前 AudioContext 可能被挂起，必须等待恢复完成
     if (ctx.state === 'suspended') {
-      ctx.resume()
+      await ctx.resume()
     }
 
     // 懒加载预合成音效
@@ -503,9 +503,13 @@ export default function MuyuGame(): JSX.Element {
     }
   }, [handleKnock])
 
-  // 键盘支持
+  // 键盘支持（仅在木鱼页面激活时生效，且不拦截输入框中的按键）
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // 排除输入框、文本域、下拉框等可输入的控件
+      const tag = (e.target as HTMLElement)?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
+
       if (e.code === 'Space' || e.code === 'Enter') {
         e.preventDefault()
         handleKnock(0, 0)
