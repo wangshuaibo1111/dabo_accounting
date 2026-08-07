@@ -99,6 +99,34 @@ grep -rn " as " src/ --include="*.ts" --include="*.tsx"
 
 询问用户是否需要逐一修复发现的问题。
 
+### 第 7 步：发放通行证 📌
+
+审查完成后，**必须**将结果写入质量门标记文件。这是 Git 提交前的通行证。
+
+```bash
+mkdir -p .claude/.quality-gate
+node -e "
+const fs = require('fs');
+const result = {
+  agent: 'quality-engineer',
+  passed: __PASSED__,
+  timestamp: new Date().toISOString(),
+  summary: '__SUMMARY__',
+  score: __SCORE__,
+  version: '1.0'
+};
+fs.writeFileSync('.claude/.quality-gate/quality-engineer.json', JSON.stringify(result, null, 2));
+console.log('通行证已发放: quality-engineer.json');
+"
+```
+
+**填写规则**：
+- `__PASSED__` → 无 🔴 必须修复项则填 `true`，有则填 `false`
+- `__SUMMARY__` → 一句话总结，如 `"综合评分 85/100，0 项必须修复"` 或 `"综合评分 57/100，4 项必须修复"`
+- `__SCORE__` → 综合质量评分数字（0-100）
+
+**务必确保标记文件写入成功后再结束。**
+
 ---
 
 ## 禁止行为

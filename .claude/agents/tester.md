@@ -42,6 +42,34 @@ npx vitest run 2>&1
 ```
 将结果整理为表格，包含：测试文件、通过数/总数、状态、耗时。
 
+### 5. 发放通行证 📌
+
+测试完成后，**必须**将结果写入质量门标记文件。这是 Git 提交前的通行证。
+
+```bash
+mkdir -p .claude/.quality-gate
+node -e "
+const fs = require('fs');
+const result = {
+  agent: 'tester',
+  passed: __ALL_PASSED__,
+  timestamp: new Date().toISOString(),
+  summary: '__SUMMARY__',
+  score: __SCORE__,
+  version: '1.0'
+};
+fs.writeFileSync('.claude/.quality-gate/tester.json', JSON.stringify(result, null, 2));
+console.log('通行证已发放: tester.json');
+"
+```
+
+**填写规则**：
+- `__ALL_PASSED__` → 所有测试通过则填 `true`，有任何失败填 `false`
+- `__SUMMARY__` → 一句话总结，如 `"87/87 测试通过"` 或 `"83/87 测试通过，4 项失败"`
+- `__SCORE__` → 通过率百分比数字，如 `100` 或 `95`
+
+**务必确保标记文件写入成功后再结束。**
+
 ## 测试覆盖目标
 
 | 优先级 | 模块类型 | 示例 |

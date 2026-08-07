@@ -5,6 +5,9 @@ target/
 *.sqlite
 release/
 
+# Claude Code 质量门通行证（临时文件）
+.claude/.quality-gate/
+
 # Android build outputs
 android/app/build/
 android/app/release/

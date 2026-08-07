@@ -147,13 +147,21 @@
       "Bash(mkdir -p \"$HOME/.claude/skills/security-audit\")",
       "Edit(~/.claude/skills/security-audit/**)",
       "Bash(npm audit *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(mkdir -p \"d:/Code/VibeCoding/大博记账APP/.claude/.quality-gate\" && echo \"目录已创建\")",
+      "Bash(mkdir -p \"d:/Code/VibeCoding/大博记账APP/.claude/hooks\")",
+      "Bash(mkdir -p \"d:/Code/VibeCoding/大博记账APP/.claude/.quality-gate\")",
+      "Bash(mkdir -p .claude/.quality-gate)",
+      "Bash(bash .claude/hooks/quality-gate.sh)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(bash .claude/hooks/cleanup-passes.sh)"
     ],
     "additionalDirectories": [
       "\\tmp",
       "C:\\Users\\22856\\.claude\\skills",
       "d:\\Code\\VibeCoding\\大博记账APP\\.claude",
-      "C:\\Users\\22856\\.claude\\skills\\comment-check"
+      "C:\\Users\\22856\\.claude\\skills\\comment-check",
+      "D:\\Code\\VibeCoding\\大博记账APP\\.claude\\.quality-gate"
     ]
   }
 }
